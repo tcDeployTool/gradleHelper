@@ -1,2 +1,2 @@
 # gradleHelper
-script to include in build.gradle files
+scripts to include in build.gradle files
