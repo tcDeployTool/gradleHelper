@@ -1,0 +1,67 @@
+//--- deploy full aar (including javadoc and source) on Repository (maven way) ---
+apply plugin: 'maven'
+
+//fill values in gradle.properties file
+def groupId = project.PUBLISH_GROUP_ID
+def artifactId = project.PUBLISH_ARTIFACT_ID
+def version = project.PUBLISH_VERSION
+
+def localReleaseDest = "${buildDir}/release/${version}"
+def releaseDest = project.PUBLISH_RELEASE_DEST
+
+//--- Deploy aar on the repository ----
+uploadArchives {
+    repositories.mavenDeployer {
+        configuration = rootProject.configurations.deployerJar
+        pom.groupId = groupId
+        pom.artifactId = artifactId
+        pom.version = version
+        //repository(url: "file://${localReleaseDest}")
+        repository(url: "${releaseDest}")
+       // repository(url: "git:releases://git@bitbucket.org:myLogin/MyRepository.git")
+/*        repository(url: "git:releases:https://myLogin@bitbucket.org/myLogin/MyRepository.git") {
+            authentication(userName: 'myLogin', password: 'myPass')
+        }*/
+        snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'),'.m2/repository/snapshots').absolutePath) { }
+        //snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'),'LocalRepository/snapshots').absolutePath) { }
+    }
+}
+
+task install(dependsOn: uploadArchives)
+
+//--- Deploy source and Javadoc ---
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError = false
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
+
+task zipRelease(type: Zip) {
+    from localReleaseDest
+    destinationDir buildDir
+    archiveName "release-${version}.zip"
+}
+
+task generateRelease << {
+    //println "Release ${version} can be found at ${localReleaseDest}/"
+    println "Release ${version} can be found at ${releaseDest}/"
+    println "Release ${version} zipped can be found ${buildDir}/release-${version}.zip"
+}
+
+generateRelease.dependsOn(uploadArchives)
+generateRelease.dependsOn(zipRelease)
