@@ -22,8 +22,7 @@ uploadArchives {
 /*        repository(url: "git:releases:https://myLogin@bitbucket.org/myLogin/MyRepository.git") {
             authentication(userName: 'myLogin', password: 'myPass')
         }*/
-        snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'),'.m2/repository/snapshots').absolutePath) { }
-        //snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'),'LocalRepository/snapshots').absolutePath) { }
+        snapshotRepository(url: 'file://' + new File(System.getProperty('user.home'),'.m2/repository').absolutePath) { }
     }
 }
 
