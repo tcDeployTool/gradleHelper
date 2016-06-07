@@ -12,7 +12,7 @@ allprojects {
             url "https://raw.github.com/synergian/wagon-git/releases"
         }
         maven {
-            url "https://api.bitbucket.org/1.0/repositories/myLogin/myRepositoryLib/raw/releases"
+            url REPOSITORY_RAW_URL
             credentials {  //should place these properties in the private ${userHome}.gradel/gradle.properties file :
                 username = REPOSITORY_USERNAME
                 password = REPOSITORY_PASSWORD
@@ -21,17 +21,13 @@ allprojects {
         mavenLocal()
     }
 }
-configurations {
-    deployerJar
-}
-dependencies {
-    deployerJar 'ar.com.synergian:wagon-git:0.2.5'
-}
+
 ```
 </P>
 - In the project  gradle.properties fill the propertie value : for i.e :
 ```properties 
 PUBLISH_RELEASE_DEST = git:releases://git@bitbucket.org:myLogin/myRepositoryLib.git
+REPOSITORY_RAW_URL = https://api.bitbucket.org/1.0/repositories/myLogin/myRepositoryLib/raw/releases
 ```
  
 Then in the build.gradle file of the module AAR  you want to upload simply add :
