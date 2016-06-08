@@ -9,9 +9,6 @@ allprojects {
     repositories {
         jcenter()
         maven {
-            url "https://raw.github.com/synergian/wagon-git/releases"
-        }
-        maven {
             url REPOSITORY_RAW_URL
             credentials {  //should place these properties in the private ${userHome}.gradel/gradle.properties file :
                 username = REPOSITORY_USERNAME
