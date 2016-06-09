@@ -38,4 +38,6 @@ PUBLISH_GROUP_ID = com.mylib
 PUBLISH_ARTIFACT_ID = mylibrarymodule1
 PUBLISH_VERSION = 1.0.0
 ```
+<B>REM :</B>
+to publish .aar archive to a private repository (like Bitbucket) with wagon-git, the ssh key (in your user.home/.ssh  directory MUST be named <B>"id_rsa"</B> (the default name), alias are not recognized
 
